@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth-password-reset'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 const SignupSchema = z.object({
   name: z.string().min(1, 'Full name is required').max(80),

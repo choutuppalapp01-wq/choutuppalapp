@@ -145,7 +145,7 @@ export function BannerCarousel({ banners }: BannerCarouselProps) {
       {/* Banner image — 16:9, full width, constrained height on desktop */}
       <div
         onClick={handleBannerClick}
-        className="relative aspect-[16/9] max-h-[380px] sm:max-h-[420px] w-full cursor-pointer overflow-hidden rounded-3xl gradient-brand shimmer"
+        className="relative aspect-[16/9] min-h-[180px] sm:min-h-[280px] max-h-[380px] sm:max-h-[420px] w-full cursor-pointer overflow-hidden rounded-3xl gradient-brand shimmer"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onMouseEnter={() => setIsPaused(true)}
@@ -210,8 +210,10 @@ export function BannerCarousel({ banners }: BannerCarouselProps) {
                 aria-label={`Go to banner ${i + 1}`}
                 onClick={(e) => { e.stopPropagation(); setIndex(i); }}
                 className={cn(
-                  'h-2 rounded-full transition-all',
-                  i === index ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80',
+                  'h-2 w-6 rounded-full transition-transform duration-300 origin-center',
+                  i === index
+                    ? 'scale-x-100 bg-white opacity-100'
+                    : 'scale-x-[0.33] bg-white/60 hover:opacity-100 opacity-60',
                 )}
               />
             ))}

@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/session'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 /**
  * POST /api/stories/[id]/view

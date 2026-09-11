@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { createPasswordResetToken } from '@/lib/auth-password-reset'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 const Schema = z.object({ identifier: z.string().min(4) })
 

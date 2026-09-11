@@ -4,7 +4,6 @@ import { requireApiUser, isAdminRole } from '@/lib/session'
 import { deleteFromR2, keyFromUrl } from '@/lib/r2-storage'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 /**
  * DELETE /api/stories/[id]

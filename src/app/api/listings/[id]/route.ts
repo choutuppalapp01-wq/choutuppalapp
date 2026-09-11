@@ -4,7 +4,6 @@ import { requireApiUser } from '@/lib/session'
 import { deleteFromR2, keyFromUrl } from '@/lib/r2-storage'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 /** PATCH /api/listings/[id] — update the user's own listing. */
 export async function PATCH(

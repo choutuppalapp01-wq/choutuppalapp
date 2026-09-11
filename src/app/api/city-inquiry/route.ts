@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 
 const Schema = z.object({
   name: z.string().min(2).max(80),

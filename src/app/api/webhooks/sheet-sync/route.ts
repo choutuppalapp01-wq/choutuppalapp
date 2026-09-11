@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma'
 import { DEFAULT_TENANT } from '@/lib/tenant-types'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
 export const maxDuration = 60
 
 const SECRET_TOKEN = process.env.SHEET_SYNC_SECRET || 'sheet_sync_secret_choutuppal_2026'

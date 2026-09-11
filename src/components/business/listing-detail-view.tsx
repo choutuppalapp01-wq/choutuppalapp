@@ -144,9 +144,10 @@ export function ListingDetailView({
             <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
               <Image 
                 fill
-                loading="lazy" 
+                priority
+                fetchPriority="high"
                 decoding="async" 
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 1024px"
                 src={coverError ? '/images/fallback-cover.webp' : getCoverUrl(listing)}
                 alt={`${listing.title} cover`}
                 style={{ objectFit: 'cover' }}
@@ -160,9 +161,9 @@ export function ListingDetailView({
                 <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl border-4 border-white/20 bg-white shadow-2xl relative z-10">
                   <Image 
                     fill
-                    loading="lazy"
+                    priority
                     decoding="async"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="112px"
                     src={logoError ? '/images/fallback-logo.webp' : getLogoUrl(listing)}
                     alt={listing.title}
                     style={{ objectFit: 'cover' }}
@@ -208,9 +209,9 @@ export function ListingDetailView({
                 <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-lg mx-auto">
                   <Image 
                     fill
-                    loading="lazy"
+                    priority
                     decoding="async"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="96px"
                     src={logoError ? '/images/fallback-logo.webp' : getLogoUrl(listing)}
                     alt={listing.title}
                     style={{ objectFit: 'cover' }}
@@ -381,8 +382,8 @@ export function ListingDetailView({
                       rel="noopener noreferrer"
                       className="relative h-40 w-40 shrink-0 overflow-hidden rounded-2xl border border-white/50 bg-white/30 shadow-sm sm:h-44 sm:w-44"
                     >
-                      <Image width={800} height={800} loading="lazy" decoding="async"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      <Image width={176} height={176} loading="lazy" decoding="async"
+                        sizes="(max-width: 640px) 160px, 176px"
                         src={url}
                         alt={`${listing.title} gallery image ${i + 1}`}
                         className="h-full w-full object-cover transition hover:scale-105"
@@ -476,7 +477,7 @@ export function ListingDetailView({
             ) : null}
 
             {/* Ratings & Reviews */}
-            <ListingReviewSection listingId={listing.id} initialAvgRating={(listing as any).avgRating ?? 4.5} />
+            <ListingReviewSection listingId={listing.id} initialAvgRating={(listing as any).avgRating ?? 4.5} initialReviews={(listing as any).reviews} />
           </div>
 
           {/* Right Column Desktop View (w-full md:w-1/3 sticky top-24 h-fit) */}
@@ -559,7 +560,7 @@ export function ListingDetailView({
               >
                 <div className="relative aspect-[16/9] overflow-hidden">
                   {r.coverImage || r.logo ? (
-                    <Image width={800} height={800} loading="lazy" decoding="async" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src={(r.coverImage || r.logo)!} alt={r.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+                    <Image width={200} height={112} loading="lazy" decoding="async" sizes="200px" src={(r.coverImage || r.logo)!} alt={r.title} className="h-full w-full object-cover transition group-hover:scale-105" />
                   ) : (
                     <div className="grid h-full w-full place-items-center gradient-brand text-2xl font-black text-white">
                       {r.title.charAt(0)}
@@ -875,24 +876,28 @@ async function shareListing(listing: ListingDetailData['listing']) {
 function ListingReviewSection({
   listingId,
   initialAvgRating,
+  initialReviews,
 }: {
   listingId: string
   initialAvgRating: number
+  initialReviews?: Array<{ id: string; rating: number; comment: string | null; createdAt: string | Date; user: { name: string | null; username: string | null } }>
 }) {
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [avgRating, setAvgRating] = useState(initialAvgRating)
-  const [reviews, setReviews] = useState<Array<{ id: string; rating: number; comment: string | null; createdAt: string; user: { name: string | null; username: string | null } }>>([])
+  const [reviews, setReviews] = useState<Array<any>>(initialReviews ?? [])
 
   useEffect(() => {
-    fetch(`/api/listings/${listingId}/reviews`)
-      .then((r) => r.json())
-      .then((j) => {
-        if (j.ok && Array.isArray(j.reviews)) setReviews(j.reviews)
-      })
-      .catch(() => {})
-  }, [listingId])
+    if (!initialReviews || initialReviews.length === 0) {
+      fetch(`/api/listings/${listingId}/reviews`)
+        .then((r) => r.json())
+        .then((j) => {
+          if (j.ok && Array.isArray(j.reviews)) setReviews(j.reviews)
+        })
+        .catch(() => {})
+    }
+  }, [listingId, initialReviews])
 
   async function submitReview(e: React.FormEvent) {
     e.preventDefault()

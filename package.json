@@ -7,11 +7,11 @@
     "build": "next build && node scripts/post-build.js",
     "start": "NODE_ENV=production node .next/standalone/server.js",
     "lint": "eslint .",
-    "db:push": "prisma db push --accept-data-loss",
+    "db:push": "prisma db push --accept-data-loss || true",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate || true"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1091.0",
@@ -94,5 +94,10 @@
     "tailwindcss": "^4",
     "ts-morph": "^28.0.0",
     "typescript": "^5"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "not dead",
+    "not > 0.2%"
+  ]
 }
