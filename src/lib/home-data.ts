@@ -199,7 +199,15 @@ export async function getVillages() {
   )
 }
 
+let cachedHomeData: { data: any; timestamp: number } | null = null
+const CACHE_TTL_MS = 30 * 1000
+
 export async function getHomePageData() {
+  const now = Date.now()
+  if (cachedHomeData && now - cachedHomeData.timestamp < CACHE_TTL_MS) {
+    return cachedHomeData.data
+  }
+
   try {
     const [
       stories,
@@ -222,9 +230,12 @@ export async function getHomePageData() {
       getLatestNews(),
       getLatestBlogs(),
     ])
-    return { stories, banners, categories, featured, realEstate, shorts, villages, latestNews, latestBlogs }
+    const result = { stories, banners, categories, featured, realEstate, shorts, villages, latestNews, latestBlogs }
+    cachedHomeData = { data: result, timestamp: now }
+    return result
   } catch (err) {
     console.error('[HomeData] getHomePageData failed:', err)
+    if (cachedHomeData) return cachedHomeData.data
     return { stories: [], banners: [], categories: [], featured: [], realEstate: [], shorts: [], villages: [], latestNews: [], latestBlogs: [] }
   }
 }
